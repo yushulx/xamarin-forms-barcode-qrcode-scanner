@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-
+//using Com.Dynamsoft.Dbr;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using System.IO;
 using System.Reflection;
 using System.Net.Http;
+
 
 namespace CustomRenderer
 {
@@ -22,10 +23,11 @@ namespace CustomRenderer
     {
         string path;
         SKBitmap bitmap;
+        //BarcodeReader barcodeReader;
         public ImageView(string imagepath)
         {
             InitializeComponent();
-
+            ResultLabel.Text = imagepath;
             try
             {
                 using (var stream = new SKFileStream(imagepath))
@@ -48,6 +50,10 @@ namespace CustomRenderer
             SKCanvas canvas = surface.Canvas;
 
             canvas.Clear();
+
+            var imageCanvas = new SKCanvas(bitmap);
+            SKPaint skPaint = new SKPaint { Color = new SkiaSharp.SKColor(255, 0, 0, 255) };
+            imageCanvas.DrawRect(100, 100, 300, 300, skPaint);
 
             float scale = Math.Min((float)info.Width / bitmap.Width,
                                (float)info.Height / bitmap.Height);

@@ -9,7 +9,7 @@
                 FontAttributes="Bold"
                 x:Name="ResultLabel"
                    Text="Results"
-                HorizontalOptions="Center"/>
+                HorizontalOptions="Start"/>
             <skia:SKCanvasView x:Name="canvasView"
                            WidthRequest="640" HeightRequest="640"
                            PaintSurface="OnCanvasViewPaintSurface" />
