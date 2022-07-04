@@ -24,10 +24,10 @@ namespace CustomRenderer
         string path;
         SKBitmap bitmap;
         IBarcodeQRCodeService _barcodeQRCodeService;
-        public PicturePage(string imagepath)
+        public PicturePage(string imagepath, IBarcodeQRCodeService barcodeQRCodeService)
         {
             InitializeComponent();
-            InitService();
+            _barcodeQRCodeService = barcodeQRCodeService;
             path = imagepath;
             //ResultLabel.Text = imagepath;
             try
@@ -75,6 +75,10 @@ namespace CustomRenderer
                     imageCanvas.DrawLine(barcodeQrData.points[3], barcodeQrData.points[0], skPaint);
                 }
             }
+            else
+            {
+                ResultLabel.Text = "No barcode QR code found";
+            }
 
             float scale = Math.Min((float)info.Width / bitmap.Width,
                                (float)info.Height / bitmap.Height);
@@ -84,24 +88,6 @@ namespace CustomRenderer
                                                y + scale * bitmap.Height);
 
             canvas.DrawBitmap(bitmap, destRect);
-        }
-
-        private async void InitService()
-        {
-            _barcodeQRCodeService = DependencyService.Get<IBarcodeQRCodeService>();
-            await Task.Run(() =>
-            {
-                try
-                {
-                    _barcodeQRCodeService.InitSDK("DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ==");
-                }
-                catch (Exception ex)
-                {
-                    DisplayAlert("Error", ex.Message, "OK");
-                }
-
-                return Task.CompletedTask;
-            });
         }
     }
 }

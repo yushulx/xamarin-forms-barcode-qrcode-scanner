@@ -3,17 +3,21 @@ using Xamarin.Forms;
 using Xamarin.Essentials;
 using System.IO;
 using System.Threading.Tasks;
+using CustomRenderer.Services;
 
 namespace CustomRenderer
 {
 	public partial class MainPage : ContentPage
 	{
         string PhotoPath = "";
+        IBarcodeQRCodeService _barcodeQRCodeService;
 
         public MainPage ()
 		{
 			InitializeComponent ();
-		}
+            InitService();
+
+        }
 
         //https://docs.microsoft.com/en-us/xamarin/essentials/media-picker?context=xamarin%2Fxamarin-forms&tabs=android
 		async void OnTakePhotoButtonClicked (object sender, EventArgs e)
@@ -54,7 +58,25 @@ namespace CustomRenderer
 
             PhotoPath = newFile;
 
-            await Navigation.PushAsync(new PicturePage(PhotoPath));
+            await Navigation.PushAsync(new PicturePage(PhotoPath, _barcodeQRCodeService));
+        }
+
+        private async void InitService()
+{
+            _barcodeQRCodeService = DependencyService.Get<IBarcodeQRCodeService>();
+            await Task.Run(() =>
+            {
+                try
+{
+                    _barcodeQRCodeService.InitSDK("DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ==");
+                }
+                catch (Exception ex)
+                {
+                    DisplayAlert("Error", ex.Message, "OK");
+                }
+
+                return Task.CompletedTask;
+            });
         }
 
         async void OnTakeVideoButtonClicked(object sender, EventArgs e)
