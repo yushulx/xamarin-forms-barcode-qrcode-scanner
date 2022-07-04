@@ -54,7 +54,7 @@ namespace CustomRenderer
 
             PhotoPath = newFile;
 
-            await Navigation.PushAsync(new ImageView(PhotoPath));
+            await Navigation.PushAsync(new PicturePage(PhotoPath));
         }
 
         async void OnTakeVideoButtonClicked(object sender, EventArgs e)

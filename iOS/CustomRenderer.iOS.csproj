@@ -66,6 +66,9 @@
     <IpaPackageName />
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Xamarin.Dynamsoft.Barcode.iOS">
+      <Version>9.2.10</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2478" />
   </ItemGroup>
   <ItemGroup>
