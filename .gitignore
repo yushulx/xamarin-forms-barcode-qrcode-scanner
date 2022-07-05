@@ -2,3 +2,4 @@
 /.svn
 obj
 bin
+iOS/mono_crash.mem.*
