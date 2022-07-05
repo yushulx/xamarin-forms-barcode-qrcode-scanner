@@ -5,7 +5,7 @@
 			 Title="Main Page">
 	<ContentPage.Content>
 		<StackLayout>
-			<Button x:Name="takePhotoButton" Text="Take Photos" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Clicked="OnTakePhotoButtonClicked" />
+			<Button x:Name="takePhotoButton" Text="Take Photo" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Clicked="OnTakePhotoButtonClicked" />
             <Button x:Name="takeVideoButton" Text="Take Video" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Clicked="OnTakeVideoButtonClicked" />
 		</StackLayout>
 	</ContentPage.Content>
