@@ -4,5 +4,6 @@
     <SelectedDevice>HUAWEI VOG-AL00</SelectedDevice>
     <SelectedPlatformGroup>PhysicalDevice</SelectedPlatformGroup>
     <ActiveDebugProfile>HUAWEI VOG-AL00 %28Android 10.0 - API 29%29</ActiveDebugProfile>
+    <AndroidDesignerPreferredDevice>Nexus 4</AndroidDesignerPreferredDevice>
   </PropertyGroup>
 </Project>

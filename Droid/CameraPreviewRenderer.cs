@@ -13,16 +13,21 @@ using Android.Widget;
 using Java.Interop;
 using Xamarin.Forms.Platform.Android.FastRenderers;
 using System.ComponentModel;
+using static Android.Hardware.Camera;
+using Size = Xamarin.Forms.Size;
+using Com.Dynamsoft.Dbr;
+using Android.OS;
+using Handler = Android.OS.Handler;
+using CustomRenderer.Services;
+using SkiaSharp;
+using static System.Net.Mime.MediaTypeNames;
 
 [assembly: ExportRenderer(typeof(CustomRenderer.CameraPreview), typeof(CameraPreviewRenderer))]
 namespace CustomRenderer.Droid
 {
-    public class CameraPreviewRenderer : FrameLayout, IVisualElementRenderer, IViewRenderer, TextureView.ISurfaceTextureListener
+    public class CameraPreviewRenderer : FrameLayout, IVisualElementRenderer, IViewRenderer, TextureView.ISurfaceTextureListener, IPreviewCallback, Handler.ICallback
     {
         global::Android.Hardware.Camera camera;
-        global::Android.Widget.Button takePhotoButton;
-        global::Android.Widget.Button toggleFlashButton;
-        global::Android.Widget.Button switchCameraButton;
         global::Android.Views.View view;
 
         Activity activity;
@@ -37,10 +42,20 @@ namespace CustomRenderer.Droid
         bool flashOn;
         int? defaultLabelFor;
 
+        private HandlerThread handlerThread;
+        private Handler backgroundHandler;
+
         //FragmentManager FragmentManager => fragmentManager ??= Context.GetFragmentManager();
 
         public event EventHandler<VisualElementChangedEventArgs> ElementChanged;
         public event EventHandler<PropertyChangedEventArgs> ElementPropertyChanged;
+
+        BarcodeReader barcodeReader = new BarcodeReader();
+        private int previewWidth;
+        private int previewHeight;
+        private int[] stride;
+        private bool isReady = true;
+        private Handler uiHandler;
 
         CameraPreview Element
         {
@@ -90,8 +105,8 @@ namespace CustomRenderer.Droid
             try
             {
                 SetupUserInterface();
-                SetupEventHandlers();
                 AddView(view);
+                uiHandler = new Handler(this);
             }
             catch (Exception ex)
             {
@@ -111,26 +126,36 @@ namespace CustomRenderer.Droid
             }
         }
 
-        //protected override void OnElementChanged(ElementChangedEventArgs<CameraPreview> e)
-        //{
-        //    base.OnElementChanged(e);
-
-        //    if (e.OldElement != null || Element == null)
-        //    {
-        //        return;
-        //    }
-
-        //    try
-        //    {
-        //        SetupUserInterface();
-        //        SetupEventHandlers();
-        //        AddView(view);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        System.Diagnostics.Debug.WriteLine(@"			ERROR: ", ex.Message);
-        //    }
-        //}
+        public void OnPreviewFrame(byte[] data, Android.Hardware.Camera camera)
+        {
+            try
+            {
+                YuvImage yuvImage = new YuvImage(data, ImageFormatType.Nv21,
+                        previewWidth, previewHeight, null);
+                stride = yuvImage.GetStrides();
+                try
+                {
+                    if (isReady)
+                    {
+                        if (backgroundHandler != null)
+                        {
+                            isReady = false;
+                            Message msg = new Message();
+                            msg.What = 100;
+                            msg.Obj = yuvImage;
+                            backgroundHandler.SendMessage(msg);
+                        }
+                    }
+                }
+                catch (BarcodeReaderException e)
+                {
+                    e.PrintStackTrace();
+                }
+            }
+            catch (System.IO.IOException)
+            {
+            }
+        }
 
         void SetupUserInterface()
         {
@@ -140,18 +165,6 @@ namespace CustomRenderer.Droid
 
             textureView = view.FindViewById<TextureView>(Resource.Id.textureView);
             textureView.SurfaceTextureListener = this;
-        }
-
-        void SetupEventHandlers()
-        {
-            takePhotoButton = view.FindViewById<global::Android.Widget.Button>(Resource.Id.takePhotoButton);
-            takePhotoButton.Click += TakePhotoButtonTapped;
-
-            switchCameraButton = view.FindViewById<global::Android.Widget.Button>(Resource.Id.switchCameraButton);
-            switchCameraButton.Click += SwitchCameraButtonTapped;
-
-            toggleFlashButton = view.FindViewById<global::Android.Widget.Button>(Resource.Id.toggleFlashButton);
-            toggleFlashButton.Click += ToggleFlashButtonTapped;
         }
 
         protected override void OnLayout(bool changed, int l, int t, int r, int b)
@@ -172,6 +185,10 @@ namespace CustomRenderer.Droid
 
         public void OnSurfaceTextureAvailable(SurfaceTexture surface, int width, int height)
         {
+            handlerThread = new HandlerThread("background");
+            handlerThread.Start();
+            backgroundHandler = new Handler(handlerThread.Looper, this);
+
             camera = global::Android.Hardware.Camera.Open((int)cameraType);
             textureView.LayoutParameters = new FrameLayout.LayoutParams(width, height);
             surfaceTexture = surface;
@@ -182,8 +199,23 @@ namespace CustomRenderer.Droid
 
         public bool OnSurfaceTextureDestroyed(SurfaceTexture surface)
         {
+            if (handlerThread != null)
+            {
+                handlerThread.QuitSafely();
+                handlerThread.Join();
+                handlerThread = null;
+            }
+
+            if (backgroundHandler != null)
+            {
+                backgroundHandler.RemoveMessages(100);
+                backgroundHandler = null;
+            }
+
+            camera.SetPreviewCallback(null);
             camera.StopPreview();
             camera.Release();
+
             return true;
         }
 
@@ -194,6 +226,7 @@ namespace CustomRenderer.Droid
 
         void PrepareAndStartCamera()
         {
+            camera.SetPreviewCallback(null);
             camera.StopPreview();
 
             var display = activity.WindowManager.DefaultDisplay;
@@ -207,97 +240,67 @@ namespace CustomRenderer.Droid
                 camera.SetDisplayOrientation(180);
             }
 
+            Parameters parameters = camera.GetParameters();
+            previewWidth = parameters.PreviewSize.Width;
+            previewHeight = parameters.PreviewSize.Height;
+            camera.SetPreviewCallback(this);
             camera.StartPreview();
         }
 
-        void ToggleFlashButtonTapped(object sender, EventArgs e)
+        public bool HandleMessage(Message msg)
         {
-            flashOn = !flashOn;
-            if (flashOn)
+            if (msg.What == 100)
             {
-                if (cameraType == CameraFacing.Back)
+                Message uiMsg = new Message();
+                uiMsg.What = 200;
+                uiMsg.Obj = "";
+                BarcodeQrData[] output = null;
+                try
                 {
-                    toggleFlashButton.SetBackgroundResource(Resource.Drawable.FlashButton);
-                    cameraType = CameraFacing.Back;
-
-                    camera.StopPreview();
-                    camera.Release();
-                    camera = global::Android.Hardware.Camera.Open((int)cameraType);
-                    var parameters = camera.GetParameters();
-                    parameters.FlashMode = global::Android.Hardware.Camera.Parameters.FlashModeTorch;
-                    camera.SetParameters(parameters);
-                    camera.SetPreviewTexture(surfaceTexture);
-                    PrepareAndStartCamera();
+                    YuvImage image = (YuvImage)msg.Obj;
+                    if (image != null)
+                    {
+                        int[] stridelist = image.GetStrides();
+                        TextResult[] results = barcodeReader.DecodeBuffer(image.GetYuvData(), previewWidth, previewHeight, stridelist[0], EnumImagePixelFormat.IpfNv21);
+                        if (results != null && results.Length > 0)
+                        {
+                            output = new BarcodeQrData[results.Length];
+                            int index = 0;
+                            foreach (TextResult result in results)
+                            {
+                                BarcodeQrData data = new BarcodeQrData();
+                                data.text = result.BarcodeText;
+                                data.format = result.BarcodeFormatString;
+                                LocalizationResult localizationResult = result.LocalizationResult;
+                                data.points = new SKPoint[localizationResult.ResultPoints.Count];
+                                int pointsIndex = 0;
+                                foreach (Com.Dynamsoft.Dbr.Point point in localizationResult.ResultPoints)
+                                {
+                                    SKPoint p = new SKPoint();
+                                    p.X = point.X;
+                                    p.Y = point.Y;
+                                    data.points[pointsIndex++] = p;
+                                }
+                                output[index++] = data;
+                            }
+                        }
+                    }
                 }
+                catch (BarcodeReaderException e)
+                {
+                    e.PrintStackTrace();
+                }
+
+                Element.NotifyResultReady(output);
+                //uiMsg.Obj = output;
+                isReady = true;
+                //uiHandler.SendMessage(uiMsg);
             }
-            else
+            else if (msg.What == 200)
             {
-                toggleFlashButton.SetBackgroundResource(Resource.Drawable.NoFlashButton);
-                camera.StopPreview();
-                camera.Release();
 
-                camera = global::Android.Hardware.Camera.Open((int)cameraType);
-                var parameters = camera.GetParameters();
-                parameters.FlashMode = global::Android.Hardware.Camera.Parameters.FlashModeOff;
-                camera.SetParameters(parameters);
-                camera.SetPreviewTexture(surfaceTexture);
-                PrepareAndStartCamera();
             }
-        }
-
-        void SwitchCameraButtonTapped(object sender, EventArgs e)
-        {
-            if (cameraType == CameraFacing.Front)
-            {
-                cameraType = CameraFacing.Back;
-
-                camera.StopPreview();
-                camera.Release();
-                camera = global::Android.Hardware.Camera.Open((int)cameraType);
-                camera.SetPreviewTexture(surfaceTexture);
-                PrepareAndStartCamera();
-            }
-            else
-            {
-                cameraType = CameraFacing.Front;
-
-                camera.StopPreview();
-                camera.Release();
-                camera = global::Android.Hardware.Camera.Open((int)cameraType);
-                camera.SetPreviewTexture(surfaceTexture);
-                PrepareAndStartCamera();
-            }
-        }
-
-        async void TakePhotoButtonTapped(object sender, EventArgs e)
-        {
-            camera.StopPreview();
-
-            var image = textureView.Bitmap;
-
-            try
-            {
-                var absolutePath = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDcim).AbsolutePath;
-                var folderPath = absolutePath + "/Camera";
-                var filePath = System.IO.Path.Combine(folderPath, string.Format("photo_{0}.jpg", Guid.NewGuid()));
-
-                var fileStream = new FileStream(filePath, FileMode.Create);
-                await image.CompressAsync(Bitmap.CompressFormat.Jpeg, 50, fileStream);
-                fileStream.Close();
-                image.Recycle();
-
-                var intent = new Android.Content.Intent(Android.Content.Intent.ActionMediaScannerScanFile);
-                var file = new Java.IO.File(filePath);
-                var uri = Android.Net.Uri.FromFile(file);
-                intent.SetData(uri);
-                MainActivity.Instance.SendBroadcast(intent);
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine(@"				", ex.Message);
-            }
-
-            camera.StartPreview();
+            return true;
         }
 
         #region IViewRenderer

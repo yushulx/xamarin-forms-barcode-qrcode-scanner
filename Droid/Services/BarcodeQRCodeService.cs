@@ -44,7 +44,6 @@ namespace CustomRenderer.Droid.Services
 
         Task<BarcodeQrData[]> IBarcodeQRCodeService.DecodeFile(string filePath)
         {
-            string decodingResult = "";
             BarcodeQrData[] output = null;
             try
             {
@@ -72,14 +71,9 @@ namespace CustomRenderer.Droid.Services
                         output[index++] = data;
                     }
                 }
-                else
-                {
-                    decodingResult = "No barcode found.";
-                }
             }
             catch (Exception e)
             {
-                decodingResult = e.Message;
             }
 
             TaskCompletionSource<BarcodeQrData[]> taskCompletionSource = new TaskCompletionSource<BarcodeQrData[]>();

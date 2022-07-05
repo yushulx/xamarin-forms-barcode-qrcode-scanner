@@ -2,14 +2,31 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:local="clr-namespace:CustomRenderer;assembly=CustomRenderer"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
 			 x:Class="CustomRenderer.CameraPage"
 			 Title="Camera Page">
-    <AbsoluteLayout>
+    <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
         <local:CameraPreview Camera="Rear"
 							 HorizontalOptions="FillAndExpand"
-							 VerticalOptions="FillAndExpand" />
-        <Label Text="Camera Preview:"
+							 VerticalOptions="FillAndExpand" 
+                             ResultReady="CameraPreview_ResultReady"/>
+        <Label Text="Camera Preview"
                FontSize="24"
+               TextColor="Blue"
                AbsoluteLayout.LayoutBounds="30, 25" />
+        <Label FontSize="18"
+                FontAttributes="Bold"
+               TextColor="Blue"
+                x:Name="ResultLabel"
+                   Text="Results"
+                HorizontalOptions="Start"
+               AbsoluteLayout.LayoutBounds="60, 60" />
+        <Frame HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <skia:SKCanvasView x:Name="canvasView"
+                               BackgroundColor="Red"
+                           HorizontalOptions="Center"
+                           PaintSurface="OnCanvasViewPaintSurface" />
+        </Frame>
+        
     </AbsoluteLayout>
 </ContentPage>
