@@ -83,9 +83,9 @@ namespace CustomRenderer
 
                     for (int i = 0; i < 4; i++)
                     {
-                        barcodeQrData.points[i] = rotateCW90(barcodeQrData.points[i], previewWidth);
-                        barcodeQrData.points[i].X = (float)(barcodeQrData.points[i].X / ratio);
-                        barcodeQrData.points[i].Y = (float)(barcodeQrData.points[i].Y / ratio);
+                        barcodeQrData.points[i] = rotateCW90(barcodeQrData.points[i], imageWidth);
+                        barcodeQrData.points[i].X = (float)(barcodeQrData.points[i].X - (imageWidth - width) / 2);
+                        barcodeQrData.points[i].Y = (float)(barcodeQrData.points[i].Y - (imageHeight - height)  /2);
                     }
 
                     //canvas.DrawText(barcodeQrData.text, new SKPoint(300, 300), skPaint);
