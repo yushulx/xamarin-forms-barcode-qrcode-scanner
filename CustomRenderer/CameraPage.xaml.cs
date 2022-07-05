@@ -55,10 +55,6 @@ namespace CustomRenderer
             double width = canvasView.Width;
             double height = canvasView.Height;
 
-            double xRatio = imageWidth / width;
-            double yRatio = imageHeight / height;
-            double ratio = xRatio > yRatio ? xRatio : yRatio;
-
             SKImageInfo info = args.Info;
             SKSurface surface = args.Surface;
             SKCanvas canvas = surface.Canvas;
@@ -83,9 +79,9 @@ namespace CustomRenderer
 
                     for (int i = 0; i < 4; i++)
                     {
-                        barcodeQrData.points[i] = rotateCW90(barcodeQrData.points[i], imageWidth);
-                        barcodeQrData.points[i].X = (float)(barcodeQrData.points[i].X - (imageWidth - width) / 2);
-                        barcodeQrData.points[i].Y = (float)(barcodeQrData.points[i].Y - (imageHeight - height)  /2);
+                        barcodeQrData.points[i] = rotateCW90(barcodeQrData.points[i], imageHeight);
+                        barcodeQrData.points[i].X = (float)(barcodeQrData.points[i].X);
+                        barcodeQrData.points[i].Y = (float)(barcodeQrData.points[i].Y + (Application.Current.MainPage.Height - height));
                     }
 
                     //canvas.DrawText(barcodeQrData.text, new SKPoint(300, 300), skPaint);
