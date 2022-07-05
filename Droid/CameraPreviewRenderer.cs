@@ -1,8 +1,6 @@
 ﻿using System;
-using System.IO;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
-using CustomRenderer;
 using CustomRenderer.Droid;
 using Android.App;
 using Android.Content;
@@ -20,7 +18,6 @@ using Android.OS;
 using Handler = Android.OS.Handler;
 using CustomRenderer.Services;
 using SkiaSharp;
-using static System.Net.Mime.MediaTypeNames;
 
 [assembly: ExportRenderer(typeof(CustomRenderer.CameraPreview), typeof(CameraPreviewRenderer))]
 namespace CustomRenderer.Droid
@@ -32,20 +29,15 @@ namespace CustomRenderer.Droid
 
         Activity activity;
         CameraFacing cameraType;
-        TextureView textureView;
+        AutoFitTextureView textureView;
         SurfaceTexture surfaceTexture;
         CameraPreview element;
         VisualElementTracker visualElementTracker;
         VisualElementRenderer visualElementRenderer;
-        FragmentManager fragmentManager;
-        //CameraFragment cameraFragment;
-        bool flashOn;
         int? defaultLabelFor;
 
         private HandlerThread handlerThread;
         private Handler backgroundHandler;
-
-        //FragmentManager FragmentManager => fragmentManager ??= Context.GetFragmentManager();
 
         public event EventHandler<VisualElementChangedEventArgs> ElementChanged;
         public event EventHandler<PropertyChangedEventArgs> ElementPropertyChanged;
@@ -55,7 +47,6 @@ namespace CustomRenderer.Droid
         private int previewHeight;
         private int[] stride;
         private bool isReady = true;
-        private Handler uiHandler;
 
         CameraPreview Element
         {
@@ -80,12 +71,9 @@ namespace CustomRenderer.Droid
 
         void OnElementChanged(ElementChangedEventArgs<CameraPreview> e)
         {
-            //CameraFragment newFragment = null;
-
             if (e.OldElement != null)
             {
                 e.OldElement.PropertyChanged -= OnElementPropertyChanged;
-                //cameraFragment.Dispose();
             }
             if (e.NewElement != null)
             {
@@ -94,19 +82,14 @@ namespace CustomRenderer.Droid
                 e.NewElement.PropertyChanged += OnElementPropertyChanged;
 
                 ElevationHelper.SetElevation(this, e.NewElement);
-                //newFragment = new CameraFragment { Element = element };
             }
 
-            //FragmentManager.BeginTransaction()
-            //    .Replace(Id, cameraFragment = newFragment, "camera")
-            //    .Commit();
             ElementChanged?.Invoke(this, new VisualElementChangedEventArgs(e.OldElement, e.NewElement));
 
             try
             {
                 SetupUserInterface();
                 AddView(view);
-                uiHandler = new Handler(this);
             }
             catch (Exception ex)
             {
@@ -114,16 +97,9 @@ namespace CustomRenderer.Droid
             }
         }
 
-        async void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
+        void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             ElementPropertyChanged?.Invoke(this, e);
-
-            switch (e.PropertyName)
-            {
-                case "Width":
-                    //await cameraFragment.RetrieveCameraDevice();
-                    break;
-            }
         }
 
         public void OnPreviewFrame(byte[] data, Android.Hardware.Camera camera)
@@ -163,7 +139,7 @@ namespace CustomRenderer.Droid
             view = activity.LayoutInflater.Inflate(Resource.Layout.CameraLayout, this, false);
             cameraType = CameraFacing.Back;
 
-            textureView = view.FindViewById<TextureView>(Resource.Id.textureView);
+            textureView = view.FindViewById<AutoFitTextureView>(Resource.Id.textureView);
             textureView.SurfaceTextureListener = this;
         }
 
@@ -243,6 +219,10 @@ namespace CustomRenderer.Droid
             Parameters parameters = camera.GetParameters();
             previewWidth = parameters.PreviewSize.Width;
             previewHeight = parameters.PreviewSize.Height;
+            if (parameters.SupportedFocusModes.Contains(Parameters.FocusModeContinuousVideo))
+            {
+                parameters.FocusMode = Parameters.FocusModeContinuousVideo;
+            }
             camera.SetPreviewCallback(this);
             camera.StartPreview();
         }
@@ -291,15 +271,10 @@ namespace CustomRenderer.Droid
                     e.PrintStackTrace();
                 }
 
-                Element.NotifyResultReady(output);
-                //uiMsg.Obj = output;
+                Element.NotifyResultReady(output, previewWidth, previewHeight);
                 isReady = true;
-                //uiHandler.SendMessage(uiMsg);
             }
-            else if (msg.What == 200)
-            {
 
-            }
             return true;
         }
 

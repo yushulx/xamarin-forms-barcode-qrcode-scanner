@@ -9,7 +9,11 @@ namespace CustomRenderer
 	public partial class CameraPage : ContentPage
 	{
         BarcodeQrData[] data = null;
-
+        private int imageWidth;
+        private int imageHeight;
+        private float scaleFactor = 1.0f;
+        private float postScaleWidthOffset;
+        private float postScaleHeightOffset;
         public CameraPage ()
 		{
 			// A custom renderer is used to display the camera UI
@@ -26,15 +30,35 @@ namespace CustomRenderer
             {
                 data = null;
             }
+
+            imageWidth = e.PreviewWidth;
+            imageHeight = e.PreviewHeight;
+
             canvasView.InvalidateSurface();
+        }
+
+        public float scale(float imagePixel)
+        {
+            return imagePixel * scaleFactor;
+        }
+
+        public static SKPoint rotateCW90(SKPoint point, int width)
+        {
+            SKPoint rotatedPoint = new SKPoint();
+            rotatedPoint.X = width - point.Y;
+            rotatedPoint.Y = point.X;
+            return rotatedPoint;
         }
 
         void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs args)
         {
             double width = canvasView.Width;
             double height = canvasView.Height;
-            double requestWidth = canvasView.WidthRequest;
-            double requestHeight = canvasView.HeightRequest;
+
+            double xRatio = imageWidth / width;
+            double yRatio = imageHeight / height;
+            double ratio = xRatio > yRatio ? xRatio : yRatio;
+
             SKImageInfo info = args.Info;
             SKSurface surface = args.Surface;
             SKCanvas canvas = surface.Canvas;
@@ -57,7 +81,14 @@ namespace CustomRenderer
                 {
                     ResultLabel.Text += barcodeQrData.text + "\n";
 
-                    canvas.DrawText(barcodeQrData.text, new SKPoint(300, 300), skPaint);
+                    for (int i = 0; i < 4; i++)
+                    {
+                        barcodeQrData.points[i] = rotateCW90(barcodeQrData.points[i], previewWidth);
+                        barcodeQrData.points[i].X = (float)(barcodeQrData.points[i].X / ratio);
+                        barcodeQrData.points[i].Y = (float)(barcodeQrData.points[i].Y / ratio);
+                    }
+
+                    //canvas.DrawText(barcodeQrData.text, new SKPoint(300, 300), skPaint);
                     canvas.DrawLine(barcodeQrData.points[0], barcodeQrData.points[1], skPaint);
                     canvas.DrawLine(barcodeQrData.points[1], barcodeQrData.points[2], skPaint);
                     canvas.DrawLine(barcodeQrData.points[2], barcodeQrData.points[3], skPaint);

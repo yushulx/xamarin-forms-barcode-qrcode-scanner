@@ -7,12 +7,16 @@ namespace CustomRenderer
 {
     public class ResultReadyEventArgs : EventArgs
     {
-        public ResultReadyEventArgs(object result)
+        public ResultReadyEventArgs(object result, int previewWidth, int previewHeight)
         {
             Result = result;
+            PreviewWidth = previewWidth;
+            PreviewHeight = previewHeight;
         }
 
         public object Result { get; private set; }
+        public int PreviewWidth { get; private set; }
+        public int PreviewHeight { get; private set; }
 
     }
 
@@ -32,11 +36,11 @@ namespace CustomRenderer
 
         public event EventHandler<ResultReadyEventArgs> ResultReady;
 
-        public void NotifyResultReady(object result)
+        public void NotifyResultReady(object result, int previewWidth, int previewHeight)
         {
             if (ResultReady != null)
             {
-                ResultReady(this, new ResultReadyEventArgs(result));
+                ResultReady(this, new ResultReadyEventArgs(result, previewWidth, previewHeight));
             }
         }
     }
