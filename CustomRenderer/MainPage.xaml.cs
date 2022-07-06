@@ -89,19 +89,14 @@ namespace CustomRenderer
             }
             else
             {
-
-                //Ask for the permission
                 status = await Permissions.RequestAsync<Permissions.Camera>();
                 if (status == PermissionStatus.Granted)
                 {
-                    //YES, now we have permission
-                    //Let the user know why
-                    await DisplayAlert("Permission needed", "We've got permission", "Ok");
+                    //await DisplayAlert("Permission needed", "We've got permission", "Ok");
                     await Navigation.PushAsync(new CameraPage());
                 }
                 else
                 {
-                    //Let the user know why
                     await DisplayAlert("Permission needed", "I will need Camera permission for this action", "Ok");
                 }
             }

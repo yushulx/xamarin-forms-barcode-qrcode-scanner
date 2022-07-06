@@ -9,20 +9,20 @@
         <local:CameraPreview 
             x:Name="cameraView"
             Camera="Rear"
-							 HorizontalOptions="FillAndExpand"
-							 VerticalOptions="FillAndExpand" 
-                             ResultReady="CameraPreview_ResultReady"/>
+			HorizontalOptions="FillAndExpand"
+			VerticalOptions="FillAndExpand" 
+            ResultReady="CameraPreview_ResultReady"/>
         <Label FontSize="18"
                 FontAttributes="Bold"
                TextColor="Blue"
                 x:Name="ResultLabel"
                    Text="Results"
-                HorizontalOptions="Start"
+                HorizontalOptions="Center"
                VerticalOptions="Center" />
         <skia:SKCanvasView x:Name="canvasView"
                            Margin="0"
                            HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
                            PaintSurface="OnCanvasViewPaintSurface" />
-        
+
     </Grid>
 </ContentPage>
