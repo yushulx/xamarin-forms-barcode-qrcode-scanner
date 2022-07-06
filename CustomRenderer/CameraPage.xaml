@@ -6,7 +6,9 @@
 			 x:Class="CustomRenderer.CameraPage"
 			 Title="Camera Page">
     <Grid x:Name="scannerView" Margin="0">
-        <local:CameraPreview Camera="Rear"
+        <local:CameraPreview 
+            x:Name="cameraView"
+            Camera="Rear"
 							 HorizontalOptions="FillAndExpand"
 							 VerticalOptions="FillAndExpand" 
                              ResultReady="CameraPreview_ResultReady"/>

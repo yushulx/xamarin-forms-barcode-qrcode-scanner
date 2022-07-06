@@ -11,9 +11,7 @@ namespace CustomRenderer
         BarcodeQrData[] data = null;
         private int imageWidth;
         private int imageHeight;
-        private float scaleFactor = 1.0f;
-        private float postScaleWidthOffset;
-        private float postScaleHeightOffset;
+
         public CameraPage ()
 		{
 			// A custom renderer is used to display the camera UI
@@ -35,11 +33,6 @@ namespace CustomRenderer
             imageHeight = e.PreviewHeight;
 
             canvasView.InvalidateSurface();
-        }
-
-        public float scale(float imagePixel)
-        {
-            return imagePixel * scaleFactor;
         }
 
         public static SKPoint rotateCW90(SKPoint point, int width)

@@ -138,7 +138,7 @@ namespace CustomRenderer.Droid
         {
             activity = this.Context as Activity;
             view = activity.LayoutInflater.Inflate(Resource.Layout.CameraLayout, this, false);
-            cameraType = CameraFacing.Back;
+            cameraType = (Element.Camera == CameraOptions.Front) ? CameraFacing.Front : CameraFacing.Back;
 
             textureView = view.FindViewById<AutoFitTextureView>(Resource.Id.textureView);
             textureView.SurfaceTextureListener = this;
