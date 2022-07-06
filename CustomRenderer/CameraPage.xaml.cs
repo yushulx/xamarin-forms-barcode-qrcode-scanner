@@ -76,8 +76,6 @@ namespace CustomRenderer
                 scaledHeight = imageHeight / scale;
             }
 
-            
-
             SKImageInfo info = args.Info;
             SKSurface surface = args.Surface;
             SKCanvas canvas = surface.Canvas;
@@ -107,24 +105,16 @@ namespace CustomRenderer
                             barcodeQrData.points[i] = rotateCW90(barcodeQrData.points[i], imageHeight);
                         }
 
-                        if (Device.RuntimePlatform == Device.iOS)
+                        if (widthScale < heightScale)
                         {
-                            if (widthScale < heightScale)
-                            {
-                                barcodeQrData.points[i].X = (float)(barcodeQrData.points[i].X / scale);
-                                barcodeQrData.points[i].Y = (float)(barcodeQrData.points[i].Y / scale - (scaledHeight - height) / 2);
-                            }
-                            else
-                            {
-                                barcodeQrData.points[i].X = (float)(barcodeQrData.points[i].X / scale - (scaledWidth - width) / 2);
-                                barcodeQrData.points[i].Y = (float)(barcodeQrData.points[i].Y / scale);
-                            }
+                            barcodeQrData.points[i].X = (float)(barcodeQrData.points[i].X / scale);
+                            barcodeQrData.points[i].Y = (float)(barcodeQrData.points[i].Y / scale - (scaledHeight - height) / 2);
                         }
                         else
                         {
-                            barcodeQrData.points[i].Y = (float)(barcodeQrData.points[i].Y + (Application.Current.MainPage.Height - height));
+                            barcodeQrData.points[i].X = (float)(barcodeQrData.points[i].X / scale - (scaledWidth - width) / 2);
+                            barcodeQrData.points[i].Y = (float)(barcodeQrData.points[i].Y / scale);
                         }
-                        
                     }
 
                     //canvas.DrawText(barcodeQrData.text, new SKPoint(300, 300), skPaint);
