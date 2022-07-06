@@ -86,6 +86,7 @@ namespace CustomRenderer.iOS
             {
                 CaptureSession.AddOutput(videoDataOutput);
                 captureOutput.reader = reader;
+                captureOutput.update = UpdateResults;
 
                 DispatchQueue queue = new DispatchQueue("camera");
                 videoDataOutput.SetSampleBufferDelegateQueue(captureOutput, queue);
@@ -98,9 +99,9 @@ namespace CustomRenderer.iOS
             IsPreviewing = true;
         }
 
-        public void Destroy()
+        void UpdateResults()
         {
-            CaptureSession?.Dispose();
+            cameraPreview.NotifyResultReady(captureOutput.output, (int)captureOutput.width, (int)captureOutput.height);
         }
     }
 }

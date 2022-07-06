@@ -23,12 +23,13 @@ namespace CustomRenderer.iOS
         private DispatchQueue queue = new DispatchQueue("ReadTask", true);
         private NSError errorr;
         private nint bpr;
-        private nint width;
-        private nint height;
+        public nint width;
+        public nint height;
         private NSData buffer;
         public string result = "";
         private iTextResult[] results;
         CameraPreview cameraPreview;
+        public BarcodeQrData[] output = null;
 
         public CaptureOutput(CameraPreview preview)
         {
@@ -58,7 +59,7 @@ namespace CustomRenderer.iOS
 
         private void ReadTask()
         {
-            BarcodeQrData[] output = null;
+            output = null;
             if (reader != null)
             {
                 results = reader.DecodeBuffer(buffer,
@@ -96,7 +97,7 @@ namespace CustomRenderer.iOS
                 }
             }
 
-            cameraPreview.NotifyResultReady(output, (int)width, (int)height);
+            DispatchQueue.MainQueue.DispatchAsync(update);
             ready = true;
         }
     }
