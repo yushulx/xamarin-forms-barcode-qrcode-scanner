@@ -18,6 +18,7 @@ using Android.OS;
 using Handler = Android.OS.Handler;
 using CustomRenderer.Services;
 using SkiaSharp;
+using static Xamarin.Essentials.Permissions;
 
 [assembly: ExportRenderer(typeof(CustomRenderer.CameraPreview), typeof(CameraPreviewRenderer))]
 namespace CustomRenderer.Droid
@@ -223,6 +224,7 @@ namespace CustomRenderer.Droid
             {
                 parameters.FocusMode = Parameters.FocusModeContinuousVideo;
             }
+            camera.SetParameters(parameters);
             camera.SetPreviewCallback(this);
             camera.StartPreview();
         }

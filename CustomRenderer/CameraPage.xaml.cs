@@ -79,8 +79,11 @@ namespace CustomRenderer
 
                     for (int i = 0; i < 4; i++)
                     {
-                        barcodeQrData.points[i] = rotateCW90(barcodeQrData.points[i], imageHeight);
-                        barcodeQrData.points[i].X = (float)(barcodeQrData.points[i].X);
+                        if (width < height)
+                        {
+                            barcodeQrData.points[i] = rotateCW90(barcodeQrData.points[i], imageHeight);
+                        }
+                        
                         barcodeQrData.points[i].Y = (float)(barcodeQrData.points[i].Y + (Application.Current.MainPage.Height - height));
                     }
 
