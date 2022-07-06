@@ -3,6 +3,7 @@ using SkiaSharp.Views.Forms;
 using SkiaSharp;
 using System;
 using Xamarin.Forms;
+using Xamarin.Essentials;
 
 namespace CustomRenderer
 {
@@ -48,6 +49,35 @@ namespace CustomRenderer
             double width = canvasView.Width;
             double height = canvasView.Height;
 
+            var mainDisplayInfo = DeviceDisplay.MainDisplayInfo;
+            var orientation = mainDisplayInfo.Orientation;
+            var rotation = mainDisplayInfo.Rotation;
+            var density = mainDisplayInfo.Density;
+
+            width *= density;
+            height *= density;
+
+            double scale, widthScale, heightScale, scaledWidth, scaledHeight;
+
+            if (orientation == DisplayOrientation.Portrait)
+            {
+                widthScale = imageHeight / width;
+                heightScale = imageWidth / height;
+                scale = widthScale < heightScale ? widthScale : heightScale;
+                scaledWidth = imageHeight / scale;
+                scaledHeight = imageWidth / scale;
+            }
+            else
+            {
+                widthScale = imageWidth / width;
+                heightScale = imageHeight / height;
+                scale = widthScale < heightScale ? widthScale : heightScale;
+                scaledWidth = imageWidth / scale;
+                scaledHeight = imageHeight / scale;
+            }
+
+            
+
             SKImageInfo info = args.Info;
             SKSurface surface = args.Surface;
             SKCanvas canvas = surface.Canvas;
@@ -72,12 +102,29 @@ namespace CustomRenderer
 
                     for (int i = 0; i < 4; i++)
                     {
-                        if (width < height)
+                        if (orientation == DisplayOrientation.Portrait)
                         {
                             barcodeQrData.points[i] = rotateCW90(barcodeQrData.points[i], imageHeight);
                         }
+
+                        if (Device.RuntimePlatform == Device.iOS)
+                        {
+                            if (widthScale < heightScale)
+                            {
+                                barcodeQrData.points[i].X = (float)(barcodeQrData.points[i].X / scale);
+                                barcodeQrData.points[i].Y = (float)(barcodeQrData.points[i].Y / scale - (scaledHeight - height) / 2);
+                            }
+                            else
+                            {
+                                barcodeQrData.points[i].X = (float)(barcodeQrData.points[i].X / scale - (scaledWidth - width) / 2);
+                                barcodeQrData.points[i].Y = (float)(barcodeQrData.points[i].Y / scale);
+                            }
+                        }
+                        else
+                        {
+                            barcodeQrData.points[i].Y = (float)(barcodeQrData.points[i].Y + (Application.Current.MainPage.Height - height));
+                        }
                         
-                        barcodeQrData.points[i].Y = (float)(barcodeQrData.points[i].Y + (Application.Current.MainPage.Height - height));
                     }
 
                     //canvas.DrawText(barcodeQrData.text, new SKPoint(300, 300), skPaint);
