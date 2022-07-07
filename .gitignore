@@ -3,3 +3,5 @@
 obj
 bin
 iOS/mono_crash.mem.*
+/Droid/BarcodeQrScanner.Droid.csproj.user
+/iOS/BarcodeQrScanner.iOS.csproj.user
