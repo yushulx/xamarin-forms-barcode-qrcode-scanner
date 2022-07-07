@@ -9,7 +9,7 @@ This sample demonstrates how to scan barcode and QR code from image file and liv
     ```csharp
     _barcodeQRCodeService.InitSDK("DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ==");
     ```
-3. Set `android` or `iOS` as the start project.
+3. Set `android` or `iOS` as the startup project.
 4. Connect your devices and run the project. 
 
     ![Xamarin Forms barcode QR code scanner](https://www.dynamsoft.com/codepool/img/2022/07/xamarin-forms-barcode-qrcode-scanner.jpg)
