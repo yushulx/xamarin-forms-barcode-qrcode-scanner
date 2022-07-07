@@ -12,11 +12,11 @@ using Xamarin.Forms.Xaml;
 using System.IO;
 using System.Reflection;
 using System.Net.Http;
-using CustomRenderer.Services;
+using BarcodeQrScanner.Services;
 using Xamarin.Forms.Shapes;
 
 
-namespace CustomRenderer
+namespace BarcodeQrScanner
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class PicturePage : ContentPage

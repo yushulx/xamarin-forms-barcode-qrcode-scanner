@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CustomRenderer
+namespace BarcodeQrScanner
 {
     public enum CameraOptions
     {

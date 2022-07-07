@@ -1,7 +1,7 @@
 ﻿using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
-using CustomRenderer.Droid;
+using BarcodeQrScanner.Droid;
 using Android.App;
 using Android.Content;
 using Android.Hardware;
@@ -16,12 +16,12 @@ using Size = Xamarin.Forms.Size;
 using Com.Dynamsoft.Dbr;
 using Android.OS;
 using Handler = Android.OS.Handler;
-using CustomRenderer.Services;
+using BarcodeQrScanner.Services;
 using SkiaSharp;
 using static Xamarin.Essentials.Permissions;
 
-[assembly: ExportRenderer(typeof(CustomRenderer.CameraPreview), typeof(CameraPreviewRenderer))]
-namespace CustomRenderer.Droid
+[assembly: ExportRenderer(typeof(BarcodeQrScanner.CameraPreview), typeof(CameraPreviewRenderer))]
+namespace BarcodeQrScanner.Droid
 {
     public class CameraPreviewRenderer : FrameLayout, IVisualElementRenderer, IViewRenderer, TextureView.ISurfaceTextureListener, IPreviewCallback, Handler.ICallback
     {

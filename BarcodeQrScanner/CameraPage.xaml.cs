@@ -1,11 +1,11 @@
-﻿using CustomRenderer.Services;
+﻿using BarcodeQrScanner.Services;
 using SkiaSharp.Views.Forms;
 using SkiaSharp;
 using System;
 using Xamarin.Forms;
 using Xamarin.Essentials;
 
-namespace CustomRenderer
+namespace BarcodeQrScanner
 {
 	public partial class CameraPage : ContentPage
 	{

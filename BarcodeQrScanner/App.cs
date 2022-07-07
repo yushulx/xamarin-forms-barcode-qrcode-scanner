@@ -2,13 +2,13 @@
 using Xamarin.Forms.Xaml;
 
 [assembly:XamlCompilation(XamlCompilationOptions.Compile)]
-namespace CustomRenderer
+namespace BarcodeQrScanner
 {
 	public class App : Application
 	{
 		public App ()
 		{
-			MainPage = new NavigationPage (new CustomRenderer.MainPage ());
+			MainPage = new NavigationPage (new BarcodeQrScanner.MainPage ());
 		}
 
 		protected override void OnStart ()

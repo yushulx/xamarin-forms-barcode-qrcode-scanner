@@ -6,14 +6,14 @@
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <ProjectGuid>{A47F6F63-D74D-4C78-BB34-518C57C41DEE}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>CustomRenderer.Droid</RootNamespace>
+    <RootNamespace>BarcodeQrScanner.Droid</RootNamespace>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <AndroidResgenClass>Resource</AndroidResgenClass>
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <AndroidApplication>True</AndroidApplication>
-    <AssemblyName>CustomRenderer.Droid</AssemblyName>
+    <AssemblyName>BarcodeQrScanner.Droid</AssemblyName>
     <TargetFrameworkVersion>v10.0</TargetFrameworkVersion>
     <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
     <NuGetPackageImportStamp />
@@ -51,9 +51,9 @@
     <Reference Include="Mono.Android" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CustomRenderer\CustomRenderer.csproj">
+    <ProjectReference Include="..\BarcodeQrScanner\BarcodeQrScanner.csproj">
       <Project>{40272DDB-4E7A-4988-B62A-38B4458F2510}</Project>
-      <Name>CustomRenderer</Name>
+      <Name>BarcodeQrScanner</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -88,7 +88,7 @@
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties XamarinHotReloadDebuggerTimeoutExceptionCustomRendererDroidHideInfoBar="True" />
+      <UserProperties XamarinHotReloadDebuggerTimeoutExceptionBarcodeQrScannerDroidHideInfoBar="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

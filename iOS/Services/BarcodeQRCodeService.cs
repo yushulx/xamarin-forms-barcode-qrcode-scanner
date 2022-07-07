@@ -1,15 +1,15 @@
 ﻿using System;
 
 using Xamarin.Forms;
-using CustomRenderer.Services;
+using BarcodeQrScanner.Services;
 using DBRiOS;
-using CustomRenderer.iOS.Services;
+using BarcodeQrScanner.iOS.Services;
 using System.Threading.Tasks;
 using Foundation;
 using SkiaSharp;
 
 [assembly: Dependency(typeof(BarcodeQRCodeService))]
-namespace CustomRenderer.iOS.Services
+namespace BarcodeQrScanner.iOS.Services
 {
     public class DBRLicenseVerificationListener : NSObject, IDBRLicenseVerificationListener
     {

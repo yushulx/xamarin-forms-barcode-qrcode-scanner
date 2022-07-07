@@ -2,7 +2,7 @@
 using CoreFoundation;
 using CoreMedia;
 using CoreVideo;
-using CustomRenderer.Services;
+using BarcodeQrScanner.Services;
 using DBRiOS;
 using Foundation;
 using SkiaSharp;
@@ -13,7 +13,7 @@ using System.Text;
 using UIKit;
 using Xamarin.Forms;
 
-namespace CustomRenderer.iOS
+namespace BarcodeQrScanner.iOS
 {
     class CaptureOutput : AVCaptureVideoDataOutputSampleBufferDelegate
     {

@@ -5,8 +5,8 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Com.Dynamsoft.Dbr;
-using CustomRenderer.Droid.Services;
-using CustomRenderer.Services;
+using BarcodeQrScanner.Droid.Services;
+using BarcodeQrScanner.Services;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(BarcodeQRCodeService))]
-namespace CustomRenderer.Droid.Services
+namespace BarcodeQrScanner.Droid.Services
 {
     public class DBRLicenseVerificationListener : Java.Lang.Object, IDBRLicenseVerificationListener
     {

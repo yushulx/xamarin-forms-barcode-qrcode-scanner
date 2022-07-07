@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
-             xmlns:local="clr-namespace:CustomRenderer;assembly=CustomRenderer"
+             xmlns:local="clr-namespace:BarcodeQrScanner;assembly=BarcodeQrScanner"
              xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
-			 x:Class="CustomRenderer.CameraPage"
+			 x:Class="BarcodeQrScanner.CameraPage"
 			 Title="Camera Page">
     <Grid x:Name="scannerView" Margin="0">
         <local:CameraPreview 

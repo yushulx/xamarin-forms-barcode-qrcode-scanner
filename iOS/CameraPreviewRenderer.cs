@@ -1,7 +1,7 @@
 ﻿using AVFoundation;
 using CoreGraphics;
-using CustomRenderer;
-using CustomRenderer.iOS;
+using BarcodeQrScanner;
+using BarcodeQrScanner.iOS;
 using Foundation;
 using System;
 using UIKit;
@@ -9,7 +9,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
 [assembly: ExportRenderer(typeof(CameraPreview), typeof(CameraPreviewRenderer))]
-namespace CustomRenderer.iOS
+namespace BarcodeQrScanner.iOS
 {
     public class CameraPreviewRenderer : ViewRenderer<CameraPreview, UICameraPreview>
     {

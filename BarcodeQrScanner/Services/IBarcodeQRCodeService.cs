@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 
 //https://docs.microsoft.com/en-us/xamarin/xamarin-forms/app-fundamentals/dependency-service/
-namespace CustomRenderer.Services
+namespace BarcodeQrScanner.Services
 {
     public class BarcodeQrData
     {

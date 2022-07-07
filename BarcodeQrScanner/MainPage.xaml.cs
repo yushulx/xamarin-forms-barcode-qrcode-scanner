@@ -3,9 +3,9 @@ using Xamarin.Forms;
 using Xamarin.Essentials;
 using System.IO;
 using System.Threading.Tasks;
-using CustomRenderer.Services;
+using BarcodeQrScanner.Services;
 
-namespace CustomRenderer
+namespace BarcodeQrScanner
 {
 	public partial class MainPage : ContentPage
 	{
