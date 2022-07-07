@@ -34,6 +34,18 @@ namespace BarcodeQrScanner
             set { SetValue(CameraProperty, value); }
         }
 
+        public static readonly BindableProperty ScanProperty = BindableProperty.Create(
+            propertyName: "ScanMode",
+            returnType: typeof(ScanOptions),
+            declaringType: typeof(CameraPreview),
+            defaultValue: ScanOptions.Single);
+
+        public ScanOptions ScanMode
+        {
+            get { return (ScanOptions)GetValue(ScanProperty); }
+            set { SetValue(ScanProperty, value); }
+        }
+
         public event EventHandler<ResultReadyEventArgs> ResultReady;
 
         public void NotifyResultReady(object result, int previewWidth, int previewHeight)

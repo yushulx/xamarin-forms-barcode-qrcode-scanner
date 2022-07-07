@@ -142,6 +142,10 @@ namespace BarcodeQrScanner.Droid
 
             textureView = view.FindViewById<AutoFitTextureView>(Resource.Id.textureView);
             textureView.SurfaceTextureListener = this;
+
+            PublicRuntimeSettings settings = barcodeReader.RuntimeSettings;
+            settings.ExpectedBarcodesCount = (Element.ScanMode == ScanOptions.Single) ? 1 : 0;
+            barcodeReader.UpdateRuntimeSettings(settings);
         }
 
         protected override void OnLayout(bool changed, int l, int t, int r, int b)

@@ -9,4 +9,10 @@ namespace BarcodeQrScanner
         Rear,
         Front
     }
+
+    public enum ScanOptions
+    {
+        Single,
+        Multiple
+    }
 }

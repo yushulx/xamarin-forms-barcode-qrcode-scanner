@@ -89,14 +89,20 @@ namespace BarcodeQrScanner
                 StrokeWidth = 10,
             };
 
-            //canvas.DrawRect(new SKRect(100, 100, 200, 200), skPaint);
+            SKPaint textPaint = new SKPaint
+            {
+                Style = SKPaintStyle.Stroke,
+                Color = SKColors.Red,
+                TextSize = (float)(18 * density),
+                StrokeWidth = 4,
+            };
 
             ResultLabel.Text = "";
             if (data != null)
             {
                 foreach (BarcodeQrData barcodeQrData in data)
                 {
-                    ResultLabel.Text += barcodeQrData.text + "\n";
+                    //ResultLabel.Text += barcodeQrData.text + "\n";
 
                     for (int i = 0; i < 4; i++)
                     {
@@ -117,7 +123,7 @@ namespace BarcodeQrScanner
                         }
                     }
 
-                    //canvas.DrawText(barcodeQrData.text, new SKPoint(300, 300), skPaint);
+                    canvas.DrawText(barcodeQrData.text, barcodeQrData.points[0], textPaint);
                     canvas.DrawLine(barcodeQrData.points[0], barcodeQrData.points[1], skPaint);
                     canvas.DrawLine(barcodeQrData.points[1], barcodeQrData.points[2], skPaint);
                     canvas.DrawLine(barcodeQrData.points[2], barcodeQrData.points[3], skPaint);

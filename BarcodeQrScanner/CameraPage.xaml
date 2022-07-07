@@ -9,6 +9,7 @@
         <local:CameraPreview 
             x:Name="cameraView"
             Camera="Rear"
+            ScanMode="Multiple"
 			HorizontalOptions="FillAndExpand"
 			VerticalOptions="FillAndExpand" 
             ResultReady="CameraPreview_ResultReady"/>

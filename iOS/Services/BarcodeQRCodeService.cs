@@ -42,8 +42,13 @@ namespace BarcodeQrScanner.iOS.Services
             BarcodeQrData[] output = null;
             try
             {
-                NSError nSError;
-                iTextResult[] results = reader.DecodeFileWithName(filePath, "", out nSError);
+                NSError error;
+
+                iPublicRuntimeSettings settings = reader.GetRuntimeSettings(out error);
+                settings.ExpectedBarcodesCount = 0;
+                reader.UpdateRuntimeSettings(settings, out error);
+                
+                iTextResult[] results = reader.DecodeFileWithName(filePath, "", out error);
                 if (results != null)
                 {
                     output = new BarcodeQrData[results.Length];

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UIKit;
+using Xamarin.Forms;
 
 namespace BarcodeQrScanner.iOS
 {
@@ -76,6 +77,11 @@ namespace BarcodeQrScanner.iOS
             }
 
             NSError error;
+
+            iPublicRuntimeSettings settings = reader.GetRuntimeSettings(out error);
+            settings.ExpectedBarcodesCount = (cameraPreview.ScanMode == ScanOptions.Single) ? 1 : 0;
+            reader.UpdateRuntimeSettings(settings, out error);
+            
             var input = new AVCaptureDeviceInput(device, out error);
             CaptureSession.AddInput(input);
             var videoDataOutput = new AVCaptureVideoDataOutput()
