@@ -12,3 +12,5 @@ This sample demonstrates how to scan barcode and QR code from image file and liv
 3. Set `android` or `iOS` as the start project.
 4. Connect your devices and run the project. 
 
+    ![Xamarin Forms barcode QR code scanner](https://www.dynamsoft.com/codepool/img/2022/07/xamarin-forms-barcode-qrcode-scanner.jpg)
+
