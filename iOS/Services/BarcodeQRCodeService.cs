@@ -49,7 +49,7 @@ namespace BarcodeQrScanner.iOS.Services
                 reader.UpdateRuntimeSettings(settings, out error);
                 
                 iTextResult[] results = reader.DecodeFileWithName(filePath, "", out error);
-                if (results != null)
+                if (results != null && results.Length > 0)
                 {
                     output = new BarcodeQrData[results.Length];
                     int index = 0;
