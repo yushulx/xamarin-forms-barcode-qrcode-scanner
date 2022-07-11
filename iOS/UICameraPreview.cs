@@ -79,7 +79,7 @@ namespace BarcodeQrScanner.iOS
             NSError error;
 
             iPublicRuntimeSettings settings = reader.GetRuntimeSettings(out error);
-            settings.ExpectedBarcodesCount = (cameraPreview.ScanMode == ScanOptions.Single) ? 1 : 0;
+            settings.ExpectedBarcodesCount = (cameraPreview.ScanMode == ScanOptions.Single) ? 1 : 512;
             reader.UpdateRuntimeSettings(settings, out error);
             
             var input = new AVCaptureDeviceInput(device, out error);

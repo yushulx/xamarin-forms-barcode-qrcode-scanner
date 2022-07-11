@@ -45,7 +45,7 @@ namespace BarcodeQrScanner.iOS.Services
                 NSError error;
 
                 iPublicRuntimeSettings settings = reader.GetRuntimeSettings(out error);
-                settings.ExpectedBarcodesCount = 0;
+                settings.ExpectedBarcodesCount = 512;
                 reader.UpdateRuntimeSettings(settings, out error);
                 
                 iTextResult[] results = reader.DecodeFileWithName(filePath, "", out error);

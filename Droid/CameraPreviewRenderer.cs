@@ -144,7 +144,7 @@ namespace BarcodeQrScanner.Droid
             textureView.SurfaceTextureListener = this;
 
             PublicRuntimeSettings settings = barcodeReader.RuntimeSettings;
-            settings.ExpectedBarcodesCount = (Element.ScanMode == ScanOptions.Single) ? 1 : 0;
+            settings.ExpectedBarcodesCount = (Element.ScanMode == ScanOptions.Single) ? 1 : 512;
             barcodeReader.UpdateRuntimeSettings(settings);
         }
 

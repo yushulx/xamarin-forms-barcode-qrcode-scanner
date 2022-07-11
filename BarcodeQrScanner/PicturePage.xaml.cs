@@ -14,7 +14,7 @@ using System.Reflection;
 using System.Net.Http;
 using BarcodeQrScanner.Services;
 using Xamarin.Forms.Shapes;
-
+using Xamarin.Essentials;
 
 namespace BarcodeQrScanner
 {
@@ -62,13 +62,21 @@ namespace BarcodeQrScanner
                 StrokeWidth = 10,
             };
 
+            SKPaint textPaint = new SKPaint
+            {
+                Style = SKPaintStyle.Stroke,
+                Color = SKColors.Red,
+                TextSize = (float)(18 * DeviceDisplay.MainDisplayInfo.Density),
+                StrokeWidth = 4,
+            };
+
             BarcodeQrData[] data = await _barcodeQRCodeService.DecodeFile(path);
             ResultLabel.Text = "";
             if (data != null)
             {
                 foreach (BarcodeQrData barcodeQrData in data)
                 {
-                    ResultLabel.Text += barcodeQrData.text + "\n";
+                    imageCanvas.DrawText(barcodeQrData.text, barcodeQrData.points[0], textPaint);
                     imageCanvas.DrawLine(barcodeQrData.points[0], barcodeQrData.points[1], skPaint);
                     imageCanvas.DrawLine(barcodeQrData.points[1], barcodeQrData.points[2], skPaint);
                     imageCanvas.DrawLine(barcodeQrData.points[2], barcodeQrData.points[3], skPaint);

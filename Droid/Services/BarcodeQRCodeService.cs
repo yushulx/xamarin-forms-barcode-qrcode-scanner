@@ -48,7 +48,7 @@ namespace BarcodeQrScanner.Droid.Services
             try
             {
                 PublicRuntimeSettings settings = reader.RuntimeSettings;
-                settings.ExpectedBarcodesCount = 0;
+                settings.ExpectedBarcodesCount = 512;
                 reader.UpdateRuntimeSettings(settings);
                 TextResult[] results = reader.DecodeFile(filePath);
                 if (results != null && results.Length > 0)
